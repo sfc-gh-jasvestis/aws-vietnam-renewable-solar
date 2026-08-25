@@ -117,7 +117,7 @@ Run all scripts including AWS integration. Deploy QuickSight dashboard from `qui
 Industry research and Snowflake customer outcomes:
 - **Vietnam has 17GW of installed solar capacity — largest in Southeast Asia, 5th in Asia-Pacific** — [IRENA Renewable Capacity Statistics](https://www.irena.org/publications/2024/Mar/Renewable-capacity-statistics-2024)
 - **Rooftop solar grew from 0 to 9.5GW in 2019-2021 — grid curtailment reached 30-40% due to oversupply** — [EVN Vietnam](https://www.evn.com.vn/d6/news/Annual-Report-2024-141-163-2.aspx)
-- **Vietnam Power Development Plan 8 (PDP8) targets 20GW solar by 2030 requiring $15B investment** — [MOIT Vietnam](https://moit.gov.vn/en/news/energy-policy/pdp8-approved.html)
+- **Vietnam Power Development Plan 8 (PDP8) targets 20GW solar by 2030 requiring $15B investment** — [MOIT Vietnam](https://moit.gov.vn/en/news/energy-policy.html)
 - **Uniper** (Snowflake customer): built a real-time energy trading and grid analytics platform on Snowflake managing 40GW of generation capacity -- [snowflake.com/customers/uniper](https://www.snowflake.com/en/customers/all-customers/case-study/uniper/)
 
 ## Key Demo Numbers
