@@ -32,15 +32,23 @@ export default function HomePage() {
       .catch(() => {});
   }, []);
 
+
+  // Look up a KPI value returned by /api/data (sourced from CURATED.KPI_SUMMARY).
+  // Falls back to the original literal so the card still renders if the API,
+  // or KPI_SUMMARY, is unavailable.
+  const kpiVal = (title: string, fallback: string): string =>
+    (data?.kpiCards as { title: string; value: string }[] | undefined)
+      ?.find((k) => k.title === title)?.value ?? fallback;
+
   const title = narrative?.title || 'SEA AWS Demo';
 
   const executiveCockpit = (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KPICard title="Solar Generation" value="847 GWh" status="neutral" />
-        <KPICard title="Capacity Factor" value="18.4%" status="neutral" />
-        <KPICard title="Curtailment" value="12%" status="danger" />
-        <KPICard title="Plants Active" value="42" status="neutral" />
+        <KPICard title="Solar Generation" value={kpiVal('Solar Generation', '847 GWh')} status="neutral" />
+        <KPICard title="Capacity Factor" value={kpiVal('Capacity Factor', '18.4%')} status="neutral" />
+        <KPICard title="Curtailment" value={kpiVal('Curtailment', '12%')} status="danger" />
+        <KPICard title="Plants Active" value={kpiVal('Plants Active', '42')} status="neutral" />
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="lg:col-span-1">
@@ -87,9 +95,9 @@ export default function HomePage() {
   const domainTab1 = (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <KPICard title="Tomorrow Forecast" value="24.2 GWh" />
-        <KPICard title="Irradiance Index" value="5.4 kWh/m²" />
-        <KPICard title="Degradation Rate" value="0.5%/yr" />
+        <KPICard title="Tomorrow Forecast" value={kpiVal('Tomorrow Forecast', '24.2 GWh')} />
+        <KPICard title="Irradiance Index" value={kpiVal('Irradiance Index', '5.4 kWh/m²')} />
+        <KPICard title="Degradation Rate" value={kpiVal('Degradation Rate', '0.5%/yr')} />
       </div>
       <Chart
         data={data?.detail || [{ x: 'Mon', y: 24 }, { x: 'Tue', y: 28 }, { x: 'Wed', y: 22 }, { x: 'Thu', y: 31 }, { x: 'Fri', y: 26 }, { x: 'Sat', y: 19 }, { x: 'Sun', y: 23 }]}
