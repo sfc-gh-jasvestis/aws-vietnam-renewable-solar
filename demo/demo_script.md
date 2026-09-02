@@ -21,8 +21,8 @@ Snowflake delivers solar farm analytics intelligence for Vietnamese renewable en
 | Database | `VIETNAM_RENEWABLE_SOLAR` |
 | Service | `VIETNAM_RENEWABLE_SOLAR_APP` |
 | Compute pool | `SEA_DEMOS_VIETNAM_POOL` |
-| Dimension table | `RAW.DOCUMENTS` (20 rows) |
-| Fact table | `RAW.METRICS` (250,000 rows, 90 days) |
+| Dimension table | `RAW.SOLAR_SITES` (20 rows) |
+| Fact table | `RAW.GENERATION_READINGS` (250,000 rows, 90 days) |
 | Curated layer | `CURATED.PERFORMANCE_SUMMARY`, `CURATED.TREND_ANALYSIS`, `CURATED.KPI_SUMMARY` |
 | Currency | VND (₫) |
 
@@ -43,9 +43,9 @@ original literal as a fallback, so it still renders if Snowflake is unreachable.
 | Card | Value | Backed by |
 |---|---|---|
 | Solar Generation | `847 GWh` | average per event |
-| Capacity Factor | `18.4%` | total across Documents |
+| Capacity Factor | `18.4%` | total across Solar Sites |
 | Curtailment | `12%` | average per event |
-| Plants Active | `42` | total across Documents |
+| Plants Active | `42` | total across Solar Sites |
 | Tomorrow Forecast | `24.2 GWh` | average per event |
 | Irradiance Index | `5.4 kWh/m²` | average per event |
 | Degradation Rate | `0.5%/yr` | average per event |
