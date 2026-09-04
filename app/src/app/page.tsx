@@ -54,6 +54,7 @@ export default function HomePage() {
         <div className="lg:col-span-1">
           <GeoMap
             country="vietnam"
+            regions={data?.regions}
             markers={[{"label": "Ninh Thuan", "value": "Solar: 450MW, CF 18%", "color": "green", "size": "lg"}, {"label": "Binh Phuoc", "value": "Solar: 200MW, curtailed", "color": "red", "size": "md"}, {"label": "Gia Lai", "value": "Solar: 120MW", "color": "green", "size": "md"}, {"label": "Da Nang", "value": "Grid substation", "color": "blue", "size": "sm"}]}
             routes={[]}
             title="Geographic Overview"
@@ -114,7 +115,7 @@ export default function HomePage() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Chart
-          data={data?.breakdown || [{ label: 'Zone North', value: 35 }, { label: 'Zone Central', value: 28 }, { label: 'Zone South', value: 22 }, { label: 'Zone East', value: 15 }]}
+          data={data?.regionAlerts || [{ label: 'Zone North', value: 35 }, { label: 'Zone Central', value: 28 }, { label: 'Zone South', value: 22 }, { label: 'Zone East', value: 15 }]}
           type="pie"
           xKey="label"
           yKeys={[{ key: 'value', name: 'MWh Lost' }]}
