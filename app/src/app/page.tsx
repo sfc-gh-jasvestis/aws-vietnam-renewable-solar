@@ -54,6 +54,7 @@ export default function HomePage() {
         <div className="lg:col-span-1">
           <GeoMap
             country="vietnam"
+            labels={{ entity: 'Plants', event: 'Generation Readings', alert: 'Curtailments' }}
             regions={data?.regions}
             markers={[{"label": "Ninh Thuan", "value": "Solar: 450MW, CF 18%", "color": "green", "size": "lg"}, {"label": "Binh Phuoc", "value": "Solar: 200MW, curtailed", "color": "red", "size": "md"}, {"label": "Gia Lai", "value": "Solar: 120MW", "color": "green", "size": "md"}, {"label": "Da Nang", "value": "Grid substation", "color": "blue", "size": "sm"}]}
             routes={[]}
@@ -84,8 +85,13 @@ export default function HomePage() {
         columns={[
           { key: 'id', header: '#' },
           { key: 'name', header: 'Plant' },
+          { key: 'region', header: 'Region' },
           { key: 'status', header: 'Status' },
-          { key: 'value', header: 'CF %' },
+          { key: 'm1', header: 'CF %' },
+          { key: 'm2', header: 'Curtailment' },
+          { key: 'm3', header: 'Tomorrow Forecast' },
+          { key: 'events', header: 'Generation Readings' },
+          { key: 'alerts', header: 'Curtailments' },
         ]}
         data={data?.entities || []}
         title="Solar Plant Performance"
