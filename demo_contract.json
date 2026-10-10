@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "repo": "aws-vietnam-renewable-solar",
+  "operation": "on-demand",
+  "data_classification": "synthetic demonstration only",
+  "units": "inverter readings (one inverter SCADA interval reading each); string checks (one string current value checked against its expected band); peak inverter heatsink temperature in deg C",
+  "grains": {
+    "RAW.PLANTS": "one row per fictional solar plant (ground-mount fixed tilt, single-axis tracker, floating solar, rooftop C&I, solar-plus-storage) in one of 6 Vietnam cities",
+    "RAW.PLANT_DAILY": "one row per plant per day (90 days)",
+    "RAW.EQUIPMENT_READINESS": "one row per plant (spare string inverter, tracker drive motor, pontoon float kit, inverter cooling fan or battery module snapshot)",
+    "CURATED.PERFORMANCE_SUMMARY": "one row per plant",
+    "CURATED.TREND_ANALYSIS": "one row per day",
+    "CURATED.LOSS_EVENT_CAUSES": "one row per root cause",
+    "CURATED.KPI_SUMMARY": "one row per KPI",
+    "ML.LOSS_EVENT_RISK_SCORES": "one row per plant (latest day)"
+  },
+  "metrics": {
+    "In-Range Inverter Readings": "100 * SUM(IN_RANGE_READINGS) / SUM(INVERTER_READINGS)",
+    "Generation Loss Events": "SUM(LOSS_EVENT_COUNT)",
+    "Faults per 1k String Checks": "1000 * SUM(STRING_FAULTS) / SUM(STRING_CHECKS)",
+    "Inverter Readings": "SUM(INVERTER_READINGS)",
+    "Plant Availability": "100 * SUM(OPERATING_HOURS) / SUM(PLANNED_HOURS)",
+    "Solar Plants": "COUNT(RAW.PLANTS)",
+    "Spare Parts Readiness": "100 * SUM(LEAST(ON_HAND_QTY, REQUIRED_QTY)) / SUM(REQUIRED_QTY)"
+  },
+  "chart_bindings": {
+    "daily_in_range": [
+      "CURATED.TREND_ANALYSIS.METRIC_DATE",
+      "IN_RANGE_PCT"
+    ],
+    "out_of_range_readings_by_cause": [
+      "CURATED.LOSS_EVENT_CAUSES.ROOT_CAUSE",
+      "OUT_OF_RANGE_READINGS"
+    ],
+    "pm_vs_in_range": [
+      "CURATED.PERFORMANCE_SUMMARY.PM_COMPLIANCE_PCT",
+      "IN_RANGE_PCT"
+    ],
+    "quicksight_loss_event_risk": [
+      "ENTITY_ID",
+      "MAX(LOSS_EVENT_PROB_7D)"
+    ]
+  },
+  "freshness": "MAX(EVENT_DATE) is an observation watermark; requestedAt is not freshness",
+  "required_capabilities": {
+    "core_pipeline": "Curated KPIs reconcile to a RAW recomputation (run_core.py checks this on every build)",
+    "loss_event_risk_model": "Snowflake ML CLASSIFICATION of P(generation loss event in next 7 days) per plant, evaluated on an out-of-time holdout",
+    "forecast_and_anomaly": "14-day fleet-wide inverter-reading volume FORECAST; peak inverter temperature ANOMALY_DETECTION (train 75 days, detect last 15)",
+    "search": "Cortex Search SEARCH.PLANT_SOP_SEARCH over synthetic generation loss response SOPs (one per plant type and cause)",
+    "semantic_analytics": "Semantic view APP.SOLAR_PERFORMANCE_ANALYTICS and Cortex Agent APP.SOLAR_PERFORMANCE_AGENT using analyst + search tools",
+    "grounded_ai": "Agent answers return generated SQL and SOP citations; the action memo uses only KPI, generation loss event, cause and risk rows",
+    "quicksight": "DIRECT_QUERY dashboard (KPIs, daily in-range inverter readings, generation loss events by plant, event risk, IoT message count) through a read-only Snowflake service user",
+    "quicksight_q": "Amazon Q topic over the curated datasets for natural-language questions",
+    "aws_ingestion": "IoT Core rule -> S3 -> Snowpipe AUTO_INGEST into RAW.LIVE_TELEMETRY",
+    "notifications": "APP.LIVE_ALARM_ALERT logs new ALARM readings to APP.ALERT_LOG and emails via SYSTEM$SEND_EMAIL; alert and tasks suspended between demos",
+    "orchestration": "Task graph APP.TASK_REFRESH_CURATED -> APP.TASK_RESCORE_RISK run on demand (EXECUTE TASK)",
+    "app_deployment": "SPCS service APP.VN_RENEWABLE_SOLAR_APP; routes /api/data, /api/ask, /api/agent"
+  },
+  "builds": {
+    "snowflake": {
+      "database": "VIETNAM_RENEWABLE_SOLAR_SNOWFLAKE",
+      "app_setting": "DEMO_PLATFORM=snowflake",
+      "live_telemetry": "APP.SIMULATE_TELEMETRY(n)",
+      "memo": "Cortex AI_COMPLETE (claude-sonnet-4-5)"
+    },
+    "aws": {
+      "database": "VIETNAM_RENEWABLE_SOLAR_AWS",
+      "app_setting": "DEMO_PLATFORM=aws",
+      "live_telemetry": "AWS IoT Core -> S3 -> Snowpipe",
+      "memo": "Amazon Bedrock Claude Sonnet 4.5 via APP.BEDROCK_GENERATE",
+      "capabilities": "see required_capabilities"
+    }
+  }
+}
